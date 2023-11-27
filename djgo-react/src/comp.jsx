@@ -13,10 +13,10 @@ import {
 
 function Comp(props){
 	const[actItem,setActItem]=useState(props.actItem)
-	handle=(e)=>{
+	const handle=(e)=>{
 		let{name,value}=e.target
-		if(e.target.types==="chackbox"){
-			value=e.target.chacked
+		if(e.target.type==="checkbox"){
+			value=e.target.checked
 		}
 		setActItem({...actItem, [name]:value})
 	}
@@ -58,7 +58,7 @@ function Comp(props){
 				</Form>
 			</ModalBody>
 			<ModalFooter>
-				<Button color="success" onClick={() => onSave(actItem)}>Save</Button>
+				<Button color="success" onClick={() => props.onSave(actItem)}>Save</Button>
 			</ModalFooter>
 		</Modal>
 	)

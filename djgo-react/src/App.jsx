@@ -1,57 +1,95 @@
 import React,{ useState,useEffect,useRef,useHistory,useMemo } from 'react'
 import Comp from './comp'
+import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
-const tasks=[
-  {id:1,
-  title:"one",
-  description:"nothing task",
-  completed:true},
-  {id:2,
-  title:"two",
-  description:"first-sec task",
-  completed:true},
-  {id:3,
-  title:"three",
-  description:"future task",
-  completed:false},
-]
 
 function App() {
   const[state,setState]=useState({
       modal:false,
       viewCompleted:false,
-      taskList:tasks,
       actItem:{
           title:"",
           description:"",
           completed:false,
       },
+      todoList:[],
+      showDescId:null,
   })
-  let toggle=()=>{
-      setState({...state,modal:!state.modal})
+  
+  const toggle=()=>{
+      setState(pstate=>({...pstate,modal:!pstate.modal}))
   }
   
-  let tabGen=()=>{
+  const refresh=()=>{
+      axios.get("http://localhost:8000/tasks/")
+        .then(res=>setState(pstate=>({...pstate,todoList:res.data})))
+        .catch(err=>console.log(err))
+  }
+
+  const createItem=()=>{
+      const itm={title:"",description:"",completed:false,}
+      setState(pstate=>({...pstate, actItem:itm, modal:!pstate.modal}))
+  }
+  
+  const handleSub=(itm)=>{
+      toggle()
+      if(itm.id){
+          axios.put(`http://localhost:8000/tasks/${itm.id}/`,itm)
+            .then(res=>refresh())
+          return
+      }
+      axios.post("http://localhost:8000/tasks/",itm)
+        .then(res=>refresh())
+  }
+
+  const handleDel=(itm)=>{
+      axios.delete(`http://localhost:8000/tasks/${itm.id}/`)
+        .then(res=>refresh())
+  }
+  
+  const editItem=(itm) => {
+    setState(pstate=>({...pstate,actItem:itm, modal:!pstate.modal }));
+  };
+  
+  useEffect(()=>{
+    refresh()
+    console.log("this is shit")
+  },[])
+  
+  const tabGen=()=>{
       return(
         <div className="my-5 tab-list">
-          <span className={state.viewCompleted ? "active" : ""} onClick={()=>setState({...state,viewCompleted:true})}>Completed</span>
-          <span className={state.viewCompleted ? "" : "active"} onClick={()=>setState({...state,viewCompleted:false})}>Incompleted</span>
+          <span className={state.viewCompleted ? "active" : ""} onClick={()=>setState(pstate=>({...pstate,viewCompleted:true}))}>Completed</span>
+          <span className={state.viewCompleted ? "" : "active"} onClick={()=>setState(pstate=>({...pstate,viewCompleted:false}))}>Incompleted</span>
         </div>
       )
   }
-  let items=()=>{
-      const newItems=state.taskList.filter(actItem => actItem.completed==state.viewCompleted)
-      return newItems.map((itm)=>(
-          <li key={itm.id} className="list-group-item d-flex justify-content-between align-items-center">
-            <span className={`todo-title mr-2 ${state.viewCompleted ? "completed-todo" : ""}`} title={itm.title}>{itm.title}</span>
-            <span>
-              <button className="btn btn-info me-1">Edit</button>
-              <button className="btn btn-danger ms-1">Delete</button>
-            </span>
-          </li>
-      ))
+  
+  const handleDesc = (itemId) => {
+      setState(prev => ({
+          ...prev,
+          showDescId: prev.showDescId !== itemId ? itemId : null,
+      }));
+  };
+  
+  const items=()=>{
+      if(document.readyState === "complete"){
+        const newItems=state.todoList.filter(actItem => actItem.completed===state.viewCompleted)
+        return newItems.map(itm=>(
+            <li key={itm.id} className="list-group-item d-flex justify-content-between align-items-center">
+              <div className="d-flex flex-column text-start sz">  
+                <span className={`todo-title mr-2 ${state.viewCompleted ? "completed-todo" : ""}`} title={itm.title} onClick={()=>handleDesc(itm.id)}>{itm.title}</span>
+                <span>{state.showDescId===itm.id ? itm.description : ""}</span>
+              </div>
+              <span>
+                <button className="btn btn-info me-1" onClick={()=>editItem(itm)}>Edit</button>
+                <button className="btn btn-danger ms-1" onClick={()=>handleDel(itm)}>Delete</button>
+              </span>
+            </li>
+        ))
+      }
   }
   
   return (
@@ -61,9 +99,9 @@ function App() {
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
               <div className="">
-              {/*<button onClick={this.createItem} className="btn btn-primary">
+              <button onClick={createItem} className="btn btn-primary">
                   Add task
-              </button>*/}
+              </button>
               </div>
               {tabGen()}
               <ul className="list-group list-group-flush">
@@ -72,12 +110,12 @@ function App() {
             </div>
           </div>
         </div>
-        <footer className="my-5 mb-2 bg-info">Chekla 2023 &copy;</footer>
+        <footer className="my-5 mb-2 bg-info pz">Chekla 2023 &copy;</footer>
         {state.modal ? (
-          <Modal
+          <Comp
             actItem={state.actItem}
             toggle={toggle}
-            onSave={()=>toggle()}
+            onSave={handleSub}
           />
         ) : null}
       </main>

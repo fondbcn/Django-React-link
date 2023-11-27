@@ -54,3 +54,14 @@
 .tab-list span.active{
   background-color: cyan;
 }
+
+.sz{
+  box-sizing: border-box;
+  max-height: 100%;
+  max-width: 60%;
+}
+
+.pz{
+  position:fixed;
+  bottom:0;
+}
