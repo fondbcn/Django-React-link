@@ -8,4 +8,7 @@ router.register(r'tasks',views.todoView,'task')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('login/', views.loginView.as_view()),
+    path('register/',views.userView.as_view()),
+    path('user/',views.getUserView.as_view()),
 ]

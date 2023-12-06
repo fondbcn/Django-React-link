@@ -6,9 +6,12 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
-django-cors-headers = "*"
 mysql-connector-python = "*"
 mysqlclient = "*"
+django-cors-headers = "*"
+djangorestframework-simplejwt = "*"
+pyjwt = "*"
+requests = "*"
 
 [dev-packages]
 

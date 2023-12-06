@@ -11,57 +11,57 @@ import {
   Label
 } from "reactstrap";
 
-function Comp(props){
-	const[actItem,setActItem]=useState(props.actItem)
-	const handle=(e)=>{
+function Comp3(props){
+	const [user, setUser] = useState(props.user);
+	const handle = (e) => {
 		let{name,value}=e.target
 		if(e.target.type==="checkbox"){
 			value=e.target.checked
 		}
-		setActItem({...actItem, [name]:value})
-	}
+			setUser((prevUser) => ({ ...prevUser, [name]: value }));
+	};
 	
 	return(
 		<Modal isOpen={true} toggle={props.toggle}>
-			<ModalHeader toggle={props.toggle}>Task Item</ModalHeader>
+			<ModalHeader toggle={props.toggle}>Log In</ModalHeader>
 			<ModalBody>
 				<Form>		
 					<FormGroup>
-						<Label for="title">Title</Label>
+						<Label for="username">Username</Label>
 						<Input
 						type="text"
-						name="title"
-						value={actItem.title}
+						name="username"
+						value={user.username}
 						onChange={handle}
-						placeholder="Enter Task Title"
+						placeholder=""
 						/>
 					</FormGroup>
 					<FormGroup>
-						<Label for="description">Description</Label>
+						<Label for="password1">Password</Label>
 						<Input
-						type="text"
-						name="description"
-						value={actItem.description}
+						type="password"
+						name="password1"
+						value={user.password1}
 						onChange={handle}
-						placeholder="Enter Task Description"
+						placeholder=""
 						/>
 					</FormGroup>
 					<FormGroup check>
-						<Label for="completed">Completed</Label>
+						<Label for="stay">Stay connected</Label>
 						<Input
 						type="checkbox"
-						name="completed"
-						checked={actItem.completed}
+						name="sesch"
+						checked={user.sesch}
 						onChange={handle}
 						/>						
 					</FormGroup>
 				</Form>
 			</ModalBody>
 			<ModalFooter>
-				<Button color="success" onClick={() => props.onSave(actItem)}>Save</Button>
+				<Button color="success" onClick={() => props.onLog(user)}>Connect</Button>
 			</ModalFooter>
 		</Modal>
 	)
 }
 
-export default Comp
+export default Comp3
