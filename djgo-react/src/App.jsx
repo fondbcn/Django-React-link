@@ -2,12 +2,37 @@ import React,{ useState,useEffect,useRef,useHistory,useMemo,useCallback } from '
 import Comp1 from './comp1'
 import Comp2 from './comp2'
 import Comp3 from './comp3'
+import {TermsAndConds,Terms,Conds,Cond} from './wrap'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
+import { 
+	useNavigate,
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Link,
+	useParams,
+	Navigate
+} from 'react-router-dom';
 
 
-function App() {
+function App(){
+    return(
+      <Router>
+        <Routes>
+          <Route path="/" element={<App1/>}/>
+          <Route path='/terms-conds' element={<TermsAndConds/>}/>
+          <Route path='/terms-conds/terms' element={<Terms/>}/>
+          <Route path='/terms-conds/conds' element={<Conds/>}>
+            <Route path=":id" element={<Cond/>}/>
+          </Route>
+        </Routes>
+      </Router>
+    )
+}
+
+function App1() {
   
   const accessToken = localStorage.getItem('jwt');
   

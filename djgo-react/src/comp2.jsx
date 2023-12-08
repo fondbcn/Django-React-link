@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import { 
+	Link,
+	BrowserRouter as Router,
+	Route,
+	Routes,
+} from "react-router-dom";
 import {
   Button,
   Modal,
@@ -14,6 +20,7 @@ import {
 function Comp2(props){
 	const[user,setUser]=useState(props.user)
 	const [checked, setChecked] = useState(false);
+	
 	const handle=(e)=>{
 		let{name,value}=e.target
 		setUser(puser=>({...puser, [name]:value}))
@@ -65,14 +72,13 @@ function Comp2(props){
 						/>
 					</FormGroup>
 					<FormGroup check>
-						<Label for="terms">Accept Terms & Conditions</Label>
+						<Label for="terms">Accept <Link to="/terms-conds" target="_blank" rel="noopener noreferrer">terms & conds</Link></Label>
 						<Input
 						type="checkbox"
 						name="terms"
 						checked={checked}
 						onChange={(e)=>setChecked(e.target.checked)}
 						/>
-						<a href="#">terms & conds</a>
 					</FormGroup>
 				</Form>
 			</ModalBody>
